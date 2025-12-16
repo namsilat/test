@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let it snow!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="snow_flakes">
+        <div class="hint">Move your mouse<br />Try to move faster ;)</div>
+
+    </div>
+
+
+
+
+    <style>
+        #snow_flakes {
+            cursor: url(cursor.svg), auto;
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hint {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            justify-content: space-around;
+            margin: auto;
+            width: 100%;
+            height: 100vh;
+            background-color: white;
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 60px;
+            color: #00aaff;
+            opacity: .1;
+        }
+
+        .snowflake {
+            --size: 20px;
+            --speed: 1;
+            position: absolute;
+            width: var(--size);
+            height: var(--size);
+            background-image: url(snowflake.svg);
+            background-size: var(--size) var(--size);
+            animation: snow-animation 2s forwards ease-in;
+            pointer-events: none;
+        }
+
+        @keyframes snow-animation {
+            0% {
+                transform: translateY(0px) scale(.8);
+                opacity: 0;
+                
+                transition-timing-function: linear;
+            }
+
+            25% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(calc(200px * var(--speed))) scale(1.2);
+                opacity: 0;
+                display: none;
+            }
+        }
+    </style>
+
+    <script>
+        let posX = 0, posY = 0;
+        let snow_flakes_div = document.getElementById("snow_flakes");
+
+        function createFlakes(x, y) {
+            let new_snow_flake;
+            new_snow_flake = document.createElement("div");
+            new_snow_flake.className = "snowflake";
+            new_snow_flake.style = "left:" + x + "px; top:" + y + "px; scale:" + (Math.random() * .6 + .4)+"; --speed:" + (Math.random() * .5 + .7);
+            snow_flakes_div.appendChild(new_snow_flake);
+            setTimeout(function () { new_snow_flake.remove() }, 2100);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (!posX) {
+                posX = e.clientX;
+                posY = e.clientY;
+            }
+            if (Math.sqrt((posX - e.clientX) * (posX - e.clientX) + (posY - e.clientY) * (posY - e.clientY)) > 10) {
+                //for (let i = 0; i < 2; i++) {
+                    createFlakes(posX + (Math.random() * 32 + 8), posY + (Math.random() * 32 + 8));
+                //}
+            };
+            posX = e.clientX;
+            posY = e.clientY;
+        });
+
+        let intervalID = setInterval(function () {
+            if ((posX + posY)>0) {
+                createFlakes(posX + (Math.random() * 32 + 8), posY + (Math.random() * 32 + 8));
+            }
+        }, 800);
+    </script>
+
+</body>
+
+</html>
