@@ -38,13 +38,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential git zip unzip curl autoconf automake libtool pkg-config cmake ninja-build libffi-dev libssl-dev zlib1g-dev libncurses5-dev libncursesw5-dev
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
 
       - name: Install Android SDK packages
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;35.0.0" "ndk;26.1.10909125"
+          SDKMANAGER="/usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager"
+          "$SDKMANAGER" --version
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platform-tools" "platforms;android-34" "build-tools;35.0.0" "ndk;26.1.10909125"
 
       - name: Prepare application source and resources
         run: |
@@ -73,6 +76,9 @@ jobs:
         run: python tools/patch_pyside_android.py
 
       - name: Build APK
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+          ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
         run: |
           pyside6-android-deploy             --config-file "$GITHUB_WORKSPACE/pysidedeploy.spec"             --wheel-pyside "$GITHUB_WORKSPACE/android-wheels/PySide6-6.8.3-6.8.3-cp311-cp311-android_aarch64.whl"             --wheel-shiboken "$GITHUB_WORKSPACE/android-wheels/shiboken6-6.8.3-6.8.3-cp311-cp311-android_aarch64.whl"             --sdk-path "$ANDROID_HOME"             --ndk-path "$ANDROID_HOME/ndk/26.1.10909125"             --keep-deployment-files             --force             -v
 
