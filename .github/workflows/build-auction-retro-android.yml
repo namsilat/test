@@ -3,6 +3,7 @@ name: Build Auction Retro Store Android APK
 on:
   push:
     branches:
+      - main
       - auction-retro-android
     paths:
       - "android/**"
@@ -72,9 +73,6 @@ jobs:
         run: python tools/patch_pyside_android.py
 
       - name: Build APK
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
         run: |
           pyside6-android-deploy             --config-file "$GITHUB_WORKSPACE/pysidedeploy.spec"             --wheel-pyside "$GITHUB_WORKSPACE/android-wheels/PySide6-6.8.3-6.8.3-cp311-cp311-android_aarch64.whl"             --wheel-shiboken "$GITHUB_WORKSPACE/android-wheels/shiboken6-6.8.3-6.8.3-cp311-cp311-android_aarch64.whl"             --sdk-path "$ANDROID_HOME"             --ndk-path "$ANDROID_HOME/ndk/26.1.10909125"             --keep-deployment-files             --force             -v
 
